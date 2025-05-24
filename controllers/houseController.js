@@ -40,10 +40,11 @@ const deleteHouse = async (req, res) => {
         
         // unauthorized user
         if (house.owner.toString() !== req.user.id) {
-            return res.status(403).json({ message: "user not authorize to update this house." })
+            return res.status(403).json({ message: "user not authorize to delete this house." })
         }
 
-        // code for delete
+        await House.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'House deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
