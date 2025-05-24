@@ -14,6 +14,41 @@ const createHouse = async (req, res) => {
     }
 };
 
+const updateHouse = async (req, res) => {
+    try {
+        const house = await House.findById(req.params.id);
+        if (!house) return res.status(404).json({ message: 'House not found' });
+        
+        // unauthorized user
+        if (house.owner.toString() !== req.user.id) {
+            return res.status(403).json({ message: "user not authorize to update this house." })
+        }
+
+        Object.assign(house, req.body);
+
+        await house.save();
+        res.status(200).json(house);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const deleteHouse = async (req, res) => {
+    try {
+        const house = await House.findById(req.params.id);
+        if (!house) return res.status(404).json({ message: 'House not found' });
+        
+        // unauthorized user
+        if (house.owner.toString() !== req.user.id) {
+            return res.status(403).json({ message: "user not authorize to update this house." })
+        }
+
+        // code for delete
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 const getHouses = async (req, res) => {
     try {
         const houses = await House.find({ status: 'available' });
@@ -37,4 +72,6 @@ module.exports = {
     createHouse,
     getHouses,
     getHouse,
+    updateHouse,
+    deleteHouse, 
 };
