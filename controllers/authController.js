@@ -7,13 +7,17 @@ const sendEmail = require('../utils/sendEmail.js');
 const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     try {
+
+        const allowedRoles = ['buyer', 'seller'];
+        const validatedRole = allowedRoles.includes(role) ? role : 'buyer';
+
         const existingUser = await User.findOne({ email });
         if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({ name, email, password: hashedPassword });
+        const newUser = await User.create({ name, email, password: hashedPassword, role: validatedRole });
 
         const token = new Token({
             userId: newUser._id,
