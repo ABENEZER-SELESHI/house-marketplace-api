@@ -7,7 +7,8 @@ const {
     changeUserRole,
     deleteUser,
     getAllHouses,
-    deleteHouse
+    deleteHouse,
+    createAdmin
 } = require('../controllers/adminController.js');
 
 const router = express.Router();
@@ -18,6 +19,7 @@ router.use(protect, adminOnly);
 router.get('/users', getAllUsers);
 router.patch('/users/:id/role', changeUserRole);
 router.delete('/users/:id', deleteUser);
+router.post('/create-admin', protect, adminOnly, createAdmin);
 
 // House management
 router.get('/houses', getAllHouses);

@@ -55,10 +55,40 @@ const deleteHouse = async (req, res) => {
     }
 };
 
+const createAdmin = async (req, res) => {
+    const { name, email, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+        name,
+        email,
+        password: hashedPassword,
+        role: 'admin'
+    });
+
+    res.status(201).json({
+        message: 'Admin user created successfully',
+        user: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+        }
+    });
+};
+
+
 module.exports = {
     getAllUsers,
     changeUserRole,
     deleteUser,
     getAllHouses,
     deleteHouse,
+    createAdmin,
 };
