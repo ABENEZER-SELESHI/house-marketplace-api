@@ -69,10 +69,43 @@ const getHouse = async (req, res) => {
     }
 };
 
+const searchHouses = async (req, res) => {
+    try {
+        const { district, minPrice, maxPrice } = req.body;
+        const filter = {};
+
+        if (district) filter['location.district'] = district;
+        if (minPrice !== undefined || maxPrice !== undefined) {
+            filter.price = {};
+            if (minPrice !== undefined) filter.price.$gte = minPrice;
+            if (maxPrice !== undefined) filter.price.$lte = maxPrice;
+        }
+
+        const houses = await House.find(filter);
+        res.json(houses);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+const getMyHouses = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const houses = await House.find({ owner: userId });
+        res.json(houses);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createHouse,
     getHouses,
     getHouse,
     updateHouse,
-    deleteHouse, 
+    deleteHouse,
+    searchHouses,
+    getMyHouses,
 };

@@ -25,13 +25,13 @@ Essential Routes
 //register
 {
   "name": "John Doe",
-  "email": "ebenezerseleshi@example.com",
+  "email": "",
   "password": "johndoe"
 }
 
 //login
 {
-  "email": "abenezerseleshi@a2sv.com",
+  "email": "",
   "password": "johndoe"
 }
 
